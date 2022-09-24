@@ -161,7 +161,58 @@ class Raytracer(object):
             finalColor = ml.add(reflectColor, specColor)
 
         elif material.matType == TRANSPARENT:
-            pass
+            temp5=[]
+            for i in range(len(dir)):
+                mul= dir[i]* -1
+                temp5.append(mul)
+            speed = temp5
+
+            outside = ml.dot(dir,intersect.normal) < 0
+
+            temp2 =[]
+            for i in range(len(intersect.normal)):
+                val = intersect.normal[i]* 0.001 #Margen de error 
+                temp2.append(val)
+
+            bias = temp2
+            
+            reflect = reflectVector(intersect.normal, speed)
+
+            reflectOrig = ml.add(intersect.point, bias) if outside else ml.subtract(intersect.poin, bias)
+            reflectColor = self.cast_ray(reflectOrig, reflect, None, recursion + 1)
+            
+
+
+            kr = fresnel( intersect.normal, dir, material.ior) 
+            refractColor = [0,0,0]
+            specColor = [0,0,0]
+            
+            for light in self.lights:
+                specColor = ml.add(specColor, light.getSpecColor(intersect, self))
+
+            if kr <1:
+                # Do refractioin
+                refract = refractVector(intersect.normal, dir, material.ior)
+                reflectOrig = ml.add(intersect.point, bias) if outside else ml.subtract(intersect.poin, bias)
+                reflectColor = self.cast_ray(reflectOrig, refract, None, recursion + 1)
+
+
+        
+
+            temp3 =[]
+            temp4 = []
+
+            for i in range(len(reflectColor)):
+                valor = reflectColor[i] *kr
+                temp3.append(valor)
+            r1= temp3
+
+            for i in range(len(reflectColor)):
+                valor = reflectColor[i] * (1-kr)
+                temp4.append(valor)
+            r2= temp4
+
+            finalColor = r1 + r2  + specColor
 
         temp=[]
         for i in range(len(finalColor)):

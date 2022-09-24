@@ -1,3 +1,4 @@
+from http.client import EXPECTATION_FAILED
 import math_lib as ml 
 import numpy as np
 
@@ -18,11 +19,59 @@ def reflectVector(normal, direction):
 
 def refractVector(normal, direction, ior):
     #Snell´s law
-    pass
+    cosi = max (-1, min(1, ml.dot(direction, normal)))
+    etai = 1
+    etat = ior 
+
+    if cosi < 0:
+        cosi = -cosi
+    else:
+        etai, etat = etat, etai
+
+        normal = normal *-1
+    
+    eta = etai / etat
+    k= 1 - (eta**2) * (1-(cosi**2))
+
+    if k < 0:
+        return None 
+    
+    r1 = (eta * cosi - k**0.5)    
+    temp =[]
+    for i in range(len(normal)):
+        val = normal[i] * r1
+        temp.append(val)
+    r2 = temp
+    
+    temp1 =[]
+    for i in range(len(direction)):
+        val = direction[i] * eta
+        temp1.append(val)
+    r3 = temp1
+    
+    R = r3 + r2
+
+    return R
 
 def fresnel (normal, direction, ior):
     #Fresnel Equation
-    pass
+    cosi = max (-1, min(1, ml.dot(direction, normal)))
+    etai = 1
+    etat = ior 
+
+    if cosi > 0:
+        etai, etat = etat, etai
+    sint = etai / etat * (max(0, 1 - cosi **2)**0.5)
+
+    if sint >=1:
+        return 1 
+    cost = max(0, 1 - sint **2) **0.5
+    cosi = abs(cosi)
+
+    Rs = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost))
+    Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost))
+    
+    return (Rs** 2 + Rp**2) / 2
 
 
 class DirectionalLight(object):
