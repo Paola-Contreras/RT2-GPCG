@@ -1,4 +1,5 @@
 import math_lib as ml 
+import numpy as np
 
 DIR_LIGHT = 0
 POINT_LIGHT = 1
@@ -14,6 +15,15 @@ def reflectVector(normal, direction):
     reflect = ml.subtract(reflect, direction)
     reflect = ml.normalized(reflect)
     return reflect
+
+def refractVector(normal, direction, ior):
+    #Snell´s law
+    pass
+
+def fresnel (normal, direction, ior):
+    #Fresnel Equation
+    pass
+
 
 class DirectionalLight(object):
     def __init__(self, direction = (0,-1,0), intensity = 1, color = (1,1,1)):
@@ -130,7 +140,11 @@ class AmbientLight(object):
         self.lightType = AMBIENT_LIGHT
 
     def getDiffuseColor(self, intersect, raytracer):
-        return self.color * self.intensity
+        temp =[]
+        for i in range(len(self.color)):
+            val = self.color[i] * self.intensity
+            temp.append(val)
+        return temp
 
     def getSpecColor(self, intersect, raytracer):
         return [0,0,0]

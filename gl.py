@@ -158,9 +158,10 @@ class Raytracer(object):
             for light in self.lights:
                 specColor = ml.add(specColor, light.getSpecColor(intersect, self))
             
-            if reflectColor is not None:
-                finalColor = reflectColor + specColor
-                return finalColor
+            finalColor = ml.add(reflectColor, specColor)
+
+        elif material.matType == TRANSPARENT:
+            pass
 
         temp=[]
         for i in range(len(finalColor)):
