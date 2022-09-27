@@ -1,4 +1,6 @@
-import math_lib as ml
+import numpy as np
+from math import  pi 
+import math_lib as ml 
 
 WHITE = (1,1,1)
 BLACK = (0,0,0)
@@ -9,17 +11,19 @@ TRANSPARENT = 2
 
 
 class Intersect(object):
-    def __init__(self, distance, point, normal, sceneObj):
+    def __init__(self, distance, point, normal, texcoords, sceneObj):
         self.distance = distance
         self.point = point
         self.normal = normal
+        self.texcoords = texcoords
         self.sceneObj = sceneObj
 
 class Material(object):
-    def __init__(self, diffuse = WHITE, spec = 1.0, ior = 1.0, matType = OPAQUE):
+    def __init__(self, diffuse = WHITE, spec = 1.0, ior = 1.0, texture = None, matType = OPAQUE):
         self.diffuse = diffuse
         self.spec = spec
         self.ior = ior
+        self.texture = texture
         self.matType = matType
 
 
@@ -37,7 +41,6 @@ class Sphere(object):
         Sum= (L[0] **2 + L[1]**2 + L[2]**2)**0.5
 
         d = (Sum ** 2 - tca ** 2) ** 0.5
-
         if d > self.radius:
             return None
 
@@ -62,7 +65,13 @@ class Sphere(object):
         normal = ml.subtract(P, self.center)
         normal = ml.normalized(normal)
 
+        u = 1 - ((np.arctan2(normal[2], normal[0]) / (2 * pi)) + 0.5)
+        v = np.arccos(-normal[1]) / pi
+
+        uvs = (u,v)
+
         return Intersect(distance = t0,
                          point = P,
                          normal = normal,
+                         texcoords = uvs,
                          sceneObj = self)
