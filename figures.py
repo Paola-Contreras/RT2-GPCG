@@ -1,5 +1,4 @@
-import numpy as np
-from math import  pi 
+from math import  pi, acos, atan2
 import math_lib as ml 
 
 WHITE = (1,1,1)
@@ -39,8 +38,10 @@ class Sphere(object):
         
         #Magnitud de un vector 
         Sum= (L[0] **2 + L[1]**2 + L[2]**2)**0.5
+        
 
         d = (Sum ** 2 - tca ** 2) ** 0.5
+       
         if d > self.radius:
             return None
 
@@ -65,8 +66,8 @@ class Sphere(object):
         normal = ml.subtract(P, self.center)
         normal = ml.normalized(normal)
 
-        u = 1 - ((np.arctan2(normal[2], normal[0]) / (2 * pi)) + 0.5)
-        v = np.arccos(-normal[1]) / pi
+        u = 1 - ((atan2(normal[2], normal[0]) / (2 * pi)) + 0.5)
+        v = acos(-normal[1]) / pi
 
         uvs = (u,v)
 

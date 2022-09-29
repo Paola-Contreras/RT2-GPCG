@@ -26,3 +26,15 @@ def subtract(a, b):
 def add (a, b):
     result = [a[i] + b[i] for i in range(min(len(a), len(b)))]
     return result
+
+def multiply(A,B):
+    temp =[]
+    for i in range(A):
+        for j in range (B):
+            mul = A[i] * B [j]
+            temp.append(mul)
+    return temp
+
+def addx3 (a, b, c):
+    result = [a[i] + b[i] + c[i] for i in range(min(len(a), len(b),  len(c)))]
+    return result
