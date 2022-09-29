@@ -4,7 +4,7 @@ from figures import *
 from lights import *
 
 
-width = 1028
+width = 1020
 height = 1020
 
 # Materiales
